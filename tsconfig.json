@@ -15,7 +15,8 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "module": "commonjs",
-    "target": "es5",
+    "target": "ES5",
+    "lib": ["ES2015", "DOM"],
     "jsx": "react",
     "outDir": "dist",
     "allowJs": true,
@@ -28,8 +29,6 @@
     "declarationMap": false,
     "removeComments": false,
     "baseUrl": ".",
-    "paths": {
-      "types": ["src/types.ts"]
-    }
+    "paths": {}
   }
 }

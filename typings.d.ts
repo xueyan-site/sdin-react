@@ -1,3 +1,5 @@
+import { PageStore } from "src"
+
 declare module '*.scss' {
   const content: { [prop:string]: string }
   export default content
@@ -26,4 +28,10 @@ declare module '*.png' {
 declare module '*.jpg' {
   const content: string
   export default content
+}
+
+declare global {
+  interface Window {
+    $page: PageStore
+  }
 }

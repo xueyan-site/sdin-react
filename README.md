@@ -1,6 +1,6 @@
 # xueyan-react
 
-`xueyan-react` is a react package.  
+`xueyan-react` is a react application tools for xueyan-typescript-cli.  
 
 - [xueyan-react](#xueyan-react)
   - [Why use it](#why-use-it)
