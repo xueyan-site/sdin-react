@@ -16,14 +16,44 @@ export interface RouteStringQuery {
  * 路由URL对象
  */
 export interface RouteUrl {
-  url: string // 'https://xxx.yy:zz/aa/bb/cc?mm=11&n=22#tt'
-  domain: string // 'https://xxx.yy:zz'
-  query: RouteStringQuery // {mm:11,n:22}
-  protocol: string // 'https'
-  host: string // 'xxx.yy:zz'
-  path: string // '/aa/bb/cc'
-  search: string // 'mm=11&n=22'
-  hash: string // 'tt'
+  /**
+   * @example 'https://xxx.yy:zz/aa/bb/cc?mm=11&n=22#tt'
+   */
+  url: string
+  /**
+   * @example 'https://xxx.yy:zz'
+   */
+  domain: string
+  /**
+   * a plain object
+   * @example {mm:11,n:22}
+   */
+  query: RouteStringQuery
+  /**
+   * no '://'
+   * @example 'https'
+   */
+  protocol: string
+  /**
+   * no 'https://', has port
+   * @example 'xxx.yy:zz'
+   */
+  host: string
+  /**
+   * has '/'
+   * @example '/aa/bb/cc'
+   */
+  path: string
+  /**
+   * no '?'
+   * @example 'mm=11&n=22'
+   */
+  search: string
+  /**
+   * no '#'
+   * @example 'tt'  
+   */
+  hash: string
 }
 
 /**
@@ -47,15 +77,49 @@ export function stringToQuery(urlStr: string): RouteStringQuery {
 }
 
 /**
+ * 将object内的所有key转成字符串
+ * 
+ * 输入与结果对照表：
+ *
+ * undefined       "undefined"
+ * null            "null"
+ * 0               "0"
+ * NaN             "NaN"
+ * Infinity        "Infinity"
+ * Symbol('dsds')  "Symbol(dsds)"
+ * /dsds/g         "/dsds/g"
+ * { a: 444 }      "{"a":444}"
+ * 455             "455"
+ * 'ssdd'          "ssdd"
+ * [44, 'kkk']     "[44,kkk]"
+ * Error('w')      "Error: w\n    at <anonymous>:1:11"
+ */
+function anyToStr(value: any) {
+  const valueType = Object.prototype.toString.call(value)
+  if (valueType === '[object String]') {
+    return value
+  }
+  if (valueType === '[object Error]') {
+    return value.stack
+  }
+  if (valueType === '[object Object]' || valueType === '[object Array]') {
+    return JSON.stringify(value)
+  }
+  return String(value)
+}
+
+/**
  * 将query对象转换成字符串
+ * undefined,false,null 值应当被排除
+ * 防止当字符串转换成query后，"undefined","false","null"被用作if判断时，作为true处理
  */
 export function queryToString(query: RouteQuery, prefix: string = '?') {
   let segments: string[] = []
   Object.keys(query).forEach(k => {
     if (k) {
       const v: any = query[k]
-      if (v || v === 0) {
-        segments.push(k + '=' + encodeURIComponent(v))
+      if (v !== undefined || v !== false || v !== null) {
+        segments.push(k + '=' + encodeURIComponent(anyToStr(v)))
       }
     }
   })

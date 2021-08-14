@@ -1,23 +1,45 @@
-import Store, { StoreOptions } from 'xueyan-react-store'
-import { TrackParams, track, getPerfLog } from './track'
-import {
-  RouteQuery,
-  RouteUrl,
-  stringToUrl,
-  urlToString
-} from './route'
+import Store from 'xueyan-react-store'
+import { track, getPerfLog } from './track'
+import { stringToUrl, urlToString } from './route'
+import type { StoreOptions } from 'xueyan-react-store'
+import type { TrackParams } from './track'
+import type { RouteQuery, RouteUrl } from './route'
 
 export const PAGE_STORE_KEY = 'PAGE'
 
+/**
+ * page meta
+ */
 export interface PagePartData {
+  /**
+   * page id, page url suffix path, no '/'
+   */
   id: string
+  /**
+   * page name
+   */
   name: string
+  /**
+   * page url full path, has '/'
+   */
   pagePath: string
+  /**
+   * page track url path, has '/'
+   */
   trackPath: string
+  /**
+   * project url public path, has '/'
+   */
   publicPath: string
+  /**
+   * page url suffix path, has '/'
+   */
   privatePath: string
 }
 
+/**
+ * page infomation
+ */
 export interface PageData extends RouteUrl, PagePartData {}
 
 export class PageStore extends Store<PageData> {
@@ -119,7 +141,7 @@ export class PageStore extends Store<PageData> {
   }
 
   /**
-   * 打点
+   * 通用打点方法
    * @param a 动作，即打点的类别，如点击、曝光等
    * @param k 埋点关键字，自定义的一个字符串，用于区分埋点
    * @param params 其它打点信息
@@ -153,7 +175,7 @@ export class PageStore extends Store<PageData> {
   }
 
   /**
-   * 页面浏览打点（会顺带附上页面的性能数据）
+   * 页面浏览时打点（会顺带附上页面的性能数据）
    * @param params 打点信息
    */
   trackPv(params?: TrackParams) {
@@ -168,7 +190,7 @@ export class PageStore extends Store<PageData> {
    * @param k 埋点关键字，自定义的一个字符串，用于区分埋点
    * @param params 其它打点信息
    */
-  trackImpr(k?: string, params?: TrackParams) {
+  trackImpr(k: string, params?: TrackParams) {
     k && this.track('ips', k, params)
   }
 
@@ -177,25 +199,33 @@ export class PageStore extends Store<PageData> {
    * @param k 埋点关键字，自定义的一个字符串，用于区分埋点
    * @param params 其它打点信息
    */
-  trackClick(k?: string, params?: TrackParams) {
+  trackClick(k: string, params?: TrackParams) {
     k && this.track('clk', k, params)
   }
 
   /**
-   * 普通打点
+   * 信息打点
    * @param k 埋点关键字，自定义的一个字符串，用于区分埋点
+   * @param info 信息
    * @param params 其它打点信息
    */
-  trackInfo(k?: string, params?: TrackParams) {
-    k && this.track('inf', k, params)
+  trackInfo(info?: any, params?: TrackParams) {
+    info && this.track('inf', undefined, {
+      ...params,
+      i: info
+    })
   }
 
   /**
-   * 出错时打点
+   * 错误打点
    * @param k 埋点关键字，自定义的一个字符串，用于区分埋点
+   * @param error 错误信息
    * @param params 其它打点信息
    */
-  trackError(k?: string, params?: TrackParams) {
-    k && this.track('err', k, params)
+  trackError(error?: Error, params?: TrackParams) {
+    error && this.track('err', undefined, {
+      ...params,
+      e: error
+    })
   }
 }
