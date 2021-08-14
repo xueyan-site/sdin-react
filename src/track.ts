@@ -1,10 +1,10 @@
-import { PageStore } from './page'
+import type { PageStore } from './page'
 
 /**
  * 打点信息参数
  */
 export interface TrackParams {
-  [key: string]: string | number | boolean | undefined
+  [key: string]: any
 }
 
 /**
@@ -14,12 +14,16 @@ export interface TrackParams {
  * @returns 
  */
 export function track(store: PageStore, params: TrackParams) {
-  return new Promise<void>((resolve, reject) => {
-    const t = document.createElement('img')
-    t.crossOrigin = 'anonymous'
-    t.src = store.formatUrl(store.data.trackPath, params)
-    t.onload = () => resolve()
-    t.onerror = err => reject(err)
+  return new Promise<void>(resolve => {
+    if (XT_DEV) {
+      console.log('[track]', params)
+      resolve()
+    } else {
+      const t = document.createElement('img')
+      t.crossOrigin = 'anonymous'
+      t.src = store.formatUrl(store.data.trackPath, params)
+      t.onload = t.onerror = () => resolve()
+    }
   })
 }
 
