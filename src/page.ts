@@ -2,15 +2,13 @@ import Store from 'xueyan-react-store'
 import { track, getPerfLog } from './track'
 import { stringToUrl, urlToString } from './route'
 import type { StoreOptions } from 'xueyan-react-store'
-import type { TrackParams } from './track'
+import type { TrackParams, Track } from './track'
 import type { RouteQuery, RouteUrl } from './route'
-
-export const PAGE_STORE_KEY = 'PAGE'
 
 /**
  * page meta
  */
-export interface PagePartData {
+export interface PageMeta {
   /**
    * page id, page url suffix path, no '/'
    */
@@ -24,10 +22,6 @@ export interface PagePartData {
    */
   pagePath: string
   /**
-   * page track url path, has '/'
-   */
-  trackPath: string
-  /**
    * project url public path, has '/'
    */
   publicPath: string
@@ -40,17 +34,38 @@ export interface PagePartData {
 /**
  * page infomation
  */
-export interface PageData extends RouteUrl, PagePartData {}
+export interface PageData extends RouteUrl, PageMeta {}
 
+/**
+ * page config options
+ */
+export interface PageOptions extends StoreOptions {
+  /**
+   * custom define tracking method
+   */
+  track?: Track
+}
+
+export const PAGE_STORE_KEY = 'PAGE'
+
+/**
+ * page store
+ */
 export class PageStore extends Store<PageData> {
-  constructor(defaultData: PageData, options?: StoreOptions) {
+  /**
+   * track method
+   */
+  private __track__: Track
+
+  constructor(defaultData: PageData, options?: PageOptions) {
     super(PAGE_STORE_KEY, defaultData, options)
+    this.__track__ = options?.track || track
   }
 
   /**
-   * 将url格式化成标准形态
+   * format path to full URL
    * 
-   * 它会为给定的URL补齐没有的域名，确保URL参数都被encode过
+   * It will fill in the missing domain name for the given URL, ensuring that the URL parameters are encoded
    * 
    * @example
    * formatUrl('/foo', { bar: 123 })
@@ -62,7 +77,7 @@ export class PageStore extends Store<PageData> {
   }
 
   /**
-   * 修改当前URL（通过操作location来实现）
+   * modify current URL (by change location.href)
    * 
    * @example
    * changeUrl('/foo', { bar: 123 })
@@ -72,7 +87,7 @@ export class PageStore extends Store<PageData> {
   }
 
   /**
-   * 替换当前URL（通过操作location来实现）
+   * replace current URL (by change location.href)
    * 
    * @example
    * replaceUrl('/foo', { bar: 123 })
@@ -82,13 +97,13 @@ export class PageStore extends Store<PageData> {
   }
 
   /**
-   * 打开指定URL（通过操作a链接来实现）
+   * open URL (by click \<a\> DOM)
    * 
-   * @param target 打开的方式（即a链接的target属性） @default 'blank'
-   * self: 当前页面加载，即当前的响应到同一HTML 4 frame（或HTML5浏览上下文）。此值是默认的，如果没有指定属性的话。
-   * blank: 新窗口打开，即到一个新的未命名的HTML4窗口或HTML5浏览器上下文
-   * parent: 加载响应到当前框架的HTML4父框架或当前的HTML5浏览上下文的父浏览上下文。如果没有parent框架或者浏览上下文，此选项的行为方式与 _self 相同。
-   * top: IHTML4中：加载的响应成完整的，原来的窗口，取消所有其它frame。 HTML5中：加载响应进入顶层浏览上下文（即，浏览上下文，它是当前的一个的祖先，并且没有parent）。如果没有parent框架或者浏览上下文，此选项的行为方式相同_self
+   * @param target The way to open (i.e. the target attribute of the a link) @default 'blank'
+   * self: Current page load, i.e. the current response to the same HTML 4 frame (or HTML5 browsing context). This value is the default, if no attribute is specified.
+   * blank: New window opens, i.e. to a new unnamed HTML4 window or HTML5 browser context
+   * parent: Loads the response to the parent HTML4 frame of the current frame or the parent browsing context of the current HTML5 browsing context. If there is no parent frame or browsing context, this option behaves in the same way as _self.
+   * top: IHTML4: Loads the response into the full, original window, eliminating all other frames. HTML5: Loads the response into the top-level browsing context (i.e., the browsing context, which is an ancestor of the current one, and has no parent). If there is no parent frame or browsing context, this option behaves the same way as _self
    * 
    * @example
    * openUrl('/foo', { bar: 123 })
@@ -101,7 +116,7 @@ export class PageStore extends Store<PageData> {
   }
 
   /**
-   * 增加当前历史记录
+   * add history record
    * 
    * @example
    * pushHistory('/foo', { bar: 123 })
@@ -111,7 +126,7 @@ export class PageStore extends Store<PageData> {
   }
 
   /**
-   * 替换当前历史记录
+   * replace history record
    * 
    * @example
    * replaceHistory('/foo', { bar: 123 })
@@ -121,7 +136,7 @@ export class PageStore extends Store<PageData> {
   }
 
   /**
-   * 回退历史记录
+   * back history record
    * 
    * @example
    * backHistory()
@@ -131,7 +146,7 @@ export class PageStore extends Store<PageData> {
   }
 
   /**
-   * 前进历史记录
+   * forward history record
    * 
    * @example
    * forwardHistory()
@@ -141,42 +156,40 @@ export class PageStore extends Store<PageData> {
   }
 
   /**
-   * 通用打点方法
-   * @param a 动作，即打点的类别，如点击、曝光等
-   * @param k 埋点关键字，自定义的一个字符串，用于区分埋点
-   * @param params 其它打点信息
+   * base track method
+   * @param a tracking action, such as click, impr, pv, etc.
+   * @param k tracking key, A custom string to distinguish burying site
+   * @param params tracking data
    * 
-   * t参数拆解后，可得到如下信息：
-   * 1 action 打点动作，如点击、曝光等
-   * 2 key    打点信息的关键字，自定义的一个字符串，用于区分埋点
-   * 3 view   浏览标识，代表当次访问页面唯一符号
-   * 4 id     页面的ID，用于标识页面的名称
-   * 5 path   页面Path
-   * 6 search 页面search，页面访问时的query字符串
-   * 7 hash   页面hash
-   * 8 refer  页面的来源
+   * t field contains following information:
+   * 1 action tracking action, such as click, impr, pv, etc.
+   * 2 key    tracking key, location flag
+   * 3 view   view id, current view page flag, a random string
+   * 4 id     page id
+   * 5 path   url path
+   * 6 search url search string
+   * 7 hash   url hash
+   * 8 refer  page refer
    */
   track(a: string, k?: string, params?: TrackParams) {
-    if (this.data.trackPath) {
-      track(this, {
-        ...params,
-        t: [
-          a,
-          k || '',
-          this.id,
-          this.data.id,
-          this.data.path,
-          this.data.search,
-          this.data.hash,
-          this.data.query.r || ''
-        ].join(';')
-      })
-    }
+    this.__track__(this, {
+      ...params,
+      t: [
+        a,
+        k || '',
+        this.id,
+        this.data.id,
+        this.data.path,
+        this.data.search,
+        this.data.hash,
+        this.data.query.r || ''
+      ].join(';')
+    })
   }
 
   /**
-   * 页面浏览时打点（会顺带附上页面的性能数据）
-   * @param params 打点信息
+   * page view tracking (with performace data)
+   * @param params tracking data
    */
   trackPv(params?: TrackParams) {
     this.track('pv', undefined, {
@@ -186,28 +199,28 @@ export class PageStore extends Store<PageData> {
   }
 
   /**
-   * 曝光时打点
-   * @param k 埋点关键字，自定义的一个字符串，用于区分埋点
-   * @param params 其它打点信息
+   * impression tracking
+   * @param k tracking key, A custom string to distinguish burying site
+   * @param params tracking data
    */
   trackImpr(k: string, params?: TrackParams) {
     k && this.track('ips', k, params)
   }
 
   /**
-   * 点击时打点
-   * @param k 埋点关键字，自定义的一个字符串，用于区分埋点
-   * @param params 其它打点信息
+   * click action tracking
+   * @param k tracking key, A custom string to distinguish burying site
+   * @param params tracking data
    */
   trackClick(k: string, params?: TrackParams) {
     k && this.track('clk', k, params)
   }
 
   /**
-   * 信息打点
-   * @param k 埋点关键字，自定义的一个字符串，用于区分埋点
-   * @param info 信息
-   * @param params 其它打点信息
+   * information tracking
+   * @param k tracking key, A custom string to distinguish burying site
+   * @param info information data
+   * @param params other tracking data
    */
   trackInfo(info?: any, params?: TrackParams) {
     info && this.track('inf', undefined, {
@@ -217,10 +230,10 @@ export class PageStore extends Store<PageData> {
   }
 
   /**
-   * 错误打点
-   * @param k 埋点关键字，自定义的一个字符串，用于区分埋点
-   * @param error 错误信息
-   * @param params 其它打点信息
+   * error tracking
+   * @param k tracking key, A custom string to distinguish burying site
+   * @param error error data
+   * @param params other tracking data
    */
   trackError(error?: Error, params?: TrackParams) {
     error && this.track('err', undefined, {

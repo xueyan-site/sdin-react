@@ -4,20 +4,38 @@ import { usePager } from './context'
 import 'intersection-observer'
 
 /**
- * 曝光组件的Props
+ * Props for Impression Component
  */
 export interface ImpressionProps {
   [key: string]: any
-  thresholds?: number | number[] // 交叉比例（intersectionRatio）达到thresholds时触发回调函数
-  intersectionRatio?: number // 目标元素的可见比例，完全可见时为1，完全不可见时小于等于0
-  deps?: any[] // 设置元素的依赖项，让打点可以在更改时得以刷新
-  id?: string // 元素的ID，若有，则使用这个ID作为选择器传给children，否则就自动生成
-  sn?: string // 元素的打点key，若不传，则不曝光
+  /**
+   * The callback function is triggered when the intersectionRatio reaches thresholds
+   */
+  thresholds?: number | number[]
+  /**
+   * Visibility ratio of the target element, 1 when fully visible, less than or equal to 0 when fully invisible
+   */
+  intersectionRatio?: number
+  /**
+   * Set the element's dependencies so that punches can be refreshed when they are changed
+   */
+  deps?: any[]
+  /**
+   * element's ID, if any, is passed to children as a selector, otherwise it is automatically generated
+   */
+  id?: string
+  /**
+   * The element's tracking key, if not passed, is not send tracking data
+   */
+  sn?: string
+  /**
+   * React component children, There is and only one DOM
+   */
   children: React.ReactElement
 }
 
 /**
- * 曝光组件
+ * Impression Component
  */
 export function Impression({
   thresholds,
