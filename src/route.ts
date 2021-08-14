@@ -1,19 +1,19 @@
 /**
- * 路由查询参数
+ * route query object
  */
 export interface RouteQuery {
   [key: string]: string | number | boolean | undefined
 }
 
 /**
- * 路由查询参数（纯字符串形态）
+ * route query object with string fields
  */
 export interface RouteStringQuery {
   [key: string]: string | undefined
 }
 
 /**
- * 路由URL对象
+ * route URL Object
  */
 export interface RouteUrl {
   /**
@@ -57,7 +57,7 @@ export interface RouteUrl {
 }
 
 /**
- * 将字符串转换为query对象
+ * Converting string to query object
  */
 export function stringToQuery(urlStr: string): RouteStringQuery {
   const query: RouteStringQuery = {}
@@ -77,9 +77,9 @@ export function stringToQuery(urlStr: string): RouteStringQuery {
 }
 
 /**
- * 将object内的所有key转成字符串
+ * Convert all fields in object to string
  * 
- * 输入与结果对照表：
+ * Inputs and results comparison table：
  *
  * undefined       "undefined"
  * null            "null"
@@ -109,9 +109,9 @@ function anyToStr(value: any) {
 }
 
 /**
- * 将query对象转换成字符串
- * undefined,false,null 值应当被排除
- * 防止当字符串转换成query后，"undefined","false","null"被用作if判断时，作为true处理
+ * Converting query object to string
+ * undefined,false,null Values should be excluded
+ * Prevent "undefined", "false", "null" from being treated as true when the string is converted to query
  */
 export function queryToString(query: RouteQuery, prefix: string = '?') {
   let segments: string[] = []
@@ -127,7 +127,7 @@ export function queryToString(query: RouteQuery, prefix: string = '?') {
 }
 
 /**
- * 将字符串转换为query对象
+ * Converting string to URL object
  */
 export function stringToUrl(urlStr: string, query?: RouteQuery): RouteUrl {
   /**
@@ -243,7 +243,7 @@ export function stringToUrl(urlStr: string, query?: RouteQuery): RouteUrl {
 }
 
 /**
- * 将字符串转换为query对象
+ * Converting URL object to string
  */
 export function urlToString(url: RouteUrl, query?: RouteQuery): string {
   let urlStr: string = url.domain + url.path

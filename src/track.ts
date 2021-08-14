@@ -1,34 +1,46 @@
 import type { PageStore } from './page'
 
 /**
- * 打点信息参数
+ * tracking data
  */
 export interface TrackParams {
   [key: string]: any
 }
 
 /**
- * 使用t.gif进行打点（对params有上限）
- * @param store 页面对象
- * @param params 打点的参数
+ * track method
+ * @param store page store
+ * @param params track params
+ * @returns void
+ */
+export type Track = (store: PageStore, params: TrackParams) => Promise<void>
+
+/**
+ * Use image for punctuation (with upper limit for params)
+ * @param store page store
+ * @param params tracking data
  * @returns 
  */
 export function track(store: PageStore, params: TrackParams) {
-  return new Promise<void>(resolve => {
-    if (XT_DEV) {
-      console.log('[track]', params)
-      resolve()
-    } else {
-      const t = document.createElement('img')
-      t.crossOrigin = 'anonymous'
-      t.src = store.formatUrl(store.data.trackPath, params)
-      t.onload = t.onerror = () => resolve()
-    }
-  })
+  if (XT_TRACK_PATH) {
+    return new Promise<void>(resolve => {
+      if (XT_DEV) {
+        console.log('[track]', params)
+        resolve()
+      } else {
+        const t = document.createElement('img')
+        t.crossOrigin = 'anonymous'
+        t.src = store.formatUrl(XT_TRACK_PATH, params)
+        t.onload = t.onerror = () => resolve()
+      }
+    })
+  } else {
+    return Promise.resolve()
+  }
 }
 
 /**
- * 获取客户端性能日志
+ * Get client performance logs
  * 
  * performance.timing.navigationStart 从同一个浏览器的上一个页面卸载 unload 结束时的时间戳（精确到毫秒）
  * performance.timing.unloadEventStart unload 事件执行时的时间戳。如果没有上一个页面，或者如果先前的页面或所需的重定向之一不是同一个来源, 这个值会返回0
