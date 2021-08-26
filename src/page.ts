@@ -157,26 +157,28 @@ export class PageStore extends Store<PageData> {
 
   /**
    * base track method
-   * @param a tracking action, such as click, impr, pv, etc.
-   * @param k tracking key, A custom string to distinguish burying site
+   * @param action tracking action, such as click, impr, pv, etc.
+   * @param label tracking label, A custom string to distinguish burying site
    * @param params tracking data
    * 
    * t field contains following information:
-   * 1 action tracking action, such as click, impr, pv, etc.
-   * 2 key    tracking key, location flag
-   * 3 view   view id, current view page flag, a random string
-   * 4 id     page id
-   * 5 path   url path
-   * 6 search url search string
-   * 7 hash   url hash
-   * 8 refer  page refer
+   * action  tracking action, such as click, impr, pv, etc.
+   * label   tracking label, location flag
+   * project project name
+   * view    view id, current view page flag, a random string
+   * id      page id
+   * path    url path
+   * search  url search string
+   * hash    url hash
+   * refer   page refer
    */
-  track(a: string, k?: string, params?: TrackParams) {
+  track(action: string, label?: string, params?: TrackParams) {
     this.__track__(this, {
       ...params,
       t: [
-        a,
-        k || '',
+        action,
+        label || '',
+        XT_NAME,
         this.id,
         this.data.id,
         this.data.path,
@@ -200,25 +202,24 @@ export class PageStore extends Store<PageData> {
 
   /**
    * impression tracking
-   * @param k tracking key, A custom string to distinguish burying site
+   * @param label tracking label, A custom string to distinguish burying site
    * @param params tracking data
    */
-  trackImpr(k: string, params?: TrackParams) {
-    k && this.track('ips', k, params)
+  trackImpr(label: string, params?: TrackParams) {
+    label && this.track('ips', label, params)
   }
 
   /**
    * click action tracking
-   * @param k tracking key, A custom string to distinguish burying site
+   * @param label tracking label, A custom string to distinguish burying site
    * @param params tracking data
    */
-  trackClick(k: string, params?: TrackParams) {
-    k && this.track('clk', k, params)
+  trackClick(label: string, params?: TrackParams) {
+    label && this.track('clk', label, params)
   }
 
   /**
    * information tracking
-   * @param k tracking key, A custom string to distinguish burying site
    * @param info information data
    * @param params other tracking data
    */
@@ -231,7 +232,6 @@ export class PageStore extends Store<PageData> {
 
   /**
    * error tracking
-   * @param k tracking key, A custom string to distinguish burying site
    * @param error error data
    * @param params other tracking data
    */
