@@ -1,6 +1,8 @@
 import Store from 'xueyan-react-store'
-import { track, getPerfLog } from './track'
+import { track } from './track'
+import { getPerfLog } from './performance'
 import { stringToUrl, urlToString } from './route'
+import { TRACK_JOIN_SYMBOL, REFERENCE_JOIN_SYMBOL } from './constants'
 import type { StoreOptions } from 'xueyan-react-store'
 import type { TrackParams, Track } from './track'
 import type { RouteQuery, RouteUrl } from './route'
@@ -72,7 +74,7 @@ export class PageStore extends Store<PageData> {
    */
   formatUrl(urlOrStr: string | RouteUrl, { sn, sid, sidx, ...query }: RouteQuery = {}) {
     const url = typeof urlOrStr === 'string' ? stringToUrl(urlOrStr, query) : urlOrStr
-    url.query.r = [this.id, sn, sid, sidx].join(',')
+    url.query.r = [this.id, sn, sid, sidx].join(REFERENCE_JOIN_SYMBOL)
     return urlToString(url)
   }
 
@@ -156,89 +158,109 @@ export class PageStore extends Store<PageData> {
   }
 
   /**
+   * get tracking main information
+   * @param action tracking action, such as click, impr, pv, etc.
+   * @param sn scene number, A custom string to distinguish burying site
+   * 
+   * contains following information:
+   * - action  tracking action, such as click, impr, pv, etc.
+   * - sn      scene number
+   * - project project name
+   * - view    view id, current view page flag, a random string
+   * - id      page id
+   * - path    url path
+   * - search  url search string
+   * - hash    url hash
+   * - refer   page refer
+   */
+  private getTrackMeta(action: string, sn?: string) {
+    return [
+      action,
+      sn || '',
+      this.id,
+      this.data.id,
+      this.data.path,
+      this.data.search,
+      this.data.hash,
+      this.data.query.r || ''
+    ].join(TRACK_JOIN_SYMBOL)
+  }
+
+  /**
    * base track method
    * @param action tracking action, such as click, impr, pv, etc.
-   * @param label tracking label, A custom string to distinguish burying site
-   * @param params tracking data
-   * 
-   * t field contains following information:
-   * action  tracking action, such as click, impr, pv, etc.
-   * label   tracking label, location flag
-   * project project name
-   * view    view id, current view page flag, a random string
-   * id      page id
-   * path    url path
-   * search  url search string
-   * hash    url hash
-   * refer   page refer
+   * @param sn scene number, A custom string to distinguish burying site
+   * @param params tracking other params
    */
-  track(action: string, label?: string, params?: TrackParams) {
-    this.__track__(this, {
+  private track(action: string, sn?: string, params?: TrackParams) {
+    this.__track__({
+      t: this.getTrackMeta(action, sn),
       ...params,
-      t: [
-        action,
-        label || '',
-        XT_NAME,
-        this.id,
-        this.data.id,
-        this.data.path,
-        this.data.search,
-        this.data.hash,
-        this.data.query.r || ''
-      ].join(';')
     })
   }
 
   /**
    * page view tracking (with performace data)
-   * @param params tracking data
+   * @param data tracking data
    */
-  trackPv(params?: TrackParams) {
+  trackPv(data?: TrackParams) {
     this.track('pv', undefined, {
-      ...params,
-      p: getPerfLog()
+      p: getPerfLog(),
+      d: data,
     })
   }
 
   /**
    * impression tracking
-   * @param label tracking label, A custom string to distinguish burying site
-   * @param params tracking data
+   * @param sn scene number, A custom string to distinguish burying site
+   * @param data tracking data
    */
-  trackImpr(label: string, params?: TrackParams) {
-    label && this.track('ips', label, params)
+  trackImpr(sn: string, data?: TrackParams) {
+    if (sn) {
+      this.track('ips', sn, {
+        d: data
+      })
+    }
   }
 
   /**
    * click action tracking
-   * @param label tracking label, A custom string to distinguish burying site
-   * @param params tracking data
+   * @param sn scene number, A custom string to distinguish burying site
+   * @param data tracking data
    */
-  trackClick(label: string, params?: TrackParams) {
-    label && this.track('clk', label, params)
+  trackClick(sn: string, data?: TrackParams) {
+    if (sn) {
+      this.track('clk', sn, {
+        d: data
+      })
+    }
   }
 
   /**
    * information tracking
    * @param info information data
-   * @param params other tracking data
+   * @param data other tracking data
    */
-  trackInfo(info?: any, params?: TrackParams) {
-    info && this.track('inf', undefined, {
-      ...params,
-      i: info
-    })
+  trackInfo(info?: any, data?: TrackParams) {
+    if (info) {
+      this.track('inf', undefined, {
+        i: info,
+        d: data,
+      })
+    }
   }
 
   /**
    * error tracking
    * @param error error data
-   * @param params other tracking data
+   * @param data other tracking data
    */
-  trackError(error?: Error, params?: TrackParams) {
-    error && this.track('err', undefined, {
-      ...params,
-      e: error
-    })
+  trackError(error?: Error, data?: TrackParams) {
+    if (error) {
+      this.track('err', undefined, {
+        e: error,
+        d: data,
+      })
+    }
   }
 }
