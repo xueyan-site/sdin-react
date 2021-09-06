@@ -118,7 +118,7 @@ export function queryToString(query: RouteQuery, prefix: string = '?') {
   Object.keys(query).forEach(k => {
     if (k) {
       const v: any = query[k]
-      if (v !== undefined || v !== false || v !== null) {
+      if (v !== undefined && v !== false && v !== null) {
         segments.push(k + '=' + encodeURIComponent(anyToStr(v)))
       }
     }
@@ -189,16 +189,10 @@ export function stringToUrl(urlStr: string, query?: RouteQuery): RouteUrl {
   let host: string = ''
   let path: string = next
   if (next) {
-    let hasDot: boolean = false
     for (let i = 0; i < next.length; i++) {
-      if (!hasDot && next[i] === '.') {
-        hasDot = true
-      }
       if (next[i] === '/') {
-        if (hasDot) {
-          host = next.slice(0, i)
-          path = next.slice(i)
-        }
+        host = next.slice(0, i)
+        path = next.slice(i)
         break
       }
     }
@@ -213,8 +207,8 @@ export function stringToUrl(urlStr: string, query?: RouteQuery): RouteUrl {
   if (protocol && host) {
     domain = protocol + '://' + host
   } else {
-    protocol = 'https'
     host = location.host
+    protocol = location.protocol.split(':')[0]
     domain = protocol + '://' + location.host
   }
   /**

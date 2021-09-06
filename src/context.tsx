@@ -2,6 +2,7 @@ import React, { useEffect, Fragment } from 'react'
 import { createProvider, useData, useStore } from 'xueyan-react-store'
 import { PageStore, PAGE_STORE_KEY } from './page'
 import { stringToUrl } from './route'
+import { initialErrorTrack } from './error'
 import type { PageData, PageMeta, PageOptions } from './page'
 
 export function usePage() {
@@ -18,10 +19,10 @@ export interface PageProviderProps extends PageOptions {
 
 export const PageProvider = createProvider(
   ({ page, ...options }: PageProviderProps) => {
-    return new PageStore(
-      Object.assign(page, stringToUrl(location.href)),
-      options
-    )
+    const data = Object.assign({}, page, stringToUrl(location.href))
+    const store = new PageStore(data, options)
+    initialErrorTrack(store)
+    return store
   },
   props => {
     useEffect(() => props.store.trackPv(), [])
