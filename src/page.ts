@@ -34,7 +34,7 @@ export interface PageMeta {
 }
 
 /**
- * page infomation
+ * page data
  */
 export interface PageData extends RouteUrl, PageMeta {}
 

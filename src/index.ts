@@ -1,6 +1,6 @@
 export { usePage, usePager, PageProvider } from './context'
 export { Impression } from './impression'
-export type { PageProviderProps } from './context'
+export type { PageProps } from './context'
 export type { ImpressionProps } from './impression'
 export type { Track, TrackParams } from './track'
 export type { PageStore, PageData, PageMeta } from './page'
