@@ -95,10 +95,10 @@ typescript@^4.0.0:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.3.5.tgz#4d1c37cc16e893973c45a06886b7113234f119f4"
   integrity sha512-DqQgihaQ9cUrskJo9kIyW/+g0Vxsk8cDtZ52a3NGh0YNTfpUSArXSohyUGnvbPazEPLu398C0UxmKSOrPumUzA==
 
-xueyan-react-store@^2.0.0:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/xueyan-react-store/-/xueyan-react-store-2.0.1.tgz#e1c8ab2defd4cdc293faddceb80b2e30ddf736f6"
-  integrity sha512-cXTzO1TDB/mnU2Kn+aTPn9ZjAeNOVwsxqyOQn/sycV9umh2uhuNKXP/xdY2gHQkIIZ5r3ANmPzdEyWPf4TM/PQ==
+xueyan-react-store@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/xueyan-react-store/-/xueyan-react-store-2.0.2.tgz#5dd1cee5ce74f8e77e06108857c5be12453289bf"
+  integrity sha512-VU2/cV4ZScKdFINkUhoBW/EUk839nNss4WZJFxEGqim2mxsktQ3fxFNWpzNueTEUsV182X5S+8hP3vLU2xhulQ==
   dependencies:
     "@babel/runtime" "^7.12.5"
     eventemitter3 "^4.0.7"

@@ -1,4 +1,39 @@
-import { PageStore } from './page'
+import { Component } from 'react'
+import type { ErrorInfo } from 'react'
+import type { PageStore } from './page'
+
+interface ErrorBoundaryProps {
+  store: PageStore
+}
+
+interface ErrorBoundaryState {
+  error: boolean
+}
+
+export class ErrorBoundary extends Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props)
+    this.state = { error: false }
+  }
+
+  static getDerivedStateFromError(): ErrorBoundaryState {
+    return { error: true }
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    this.props.store.trackError(error, errorInfo)
+    console.error(error)
+  }
+
+  render() {
+    return this.state.error 
+      ? null
+      : this.props.children
+  }
+}
 
 /**
  * 记录是否被初始化
@@ -16,7 +51,7 @@ let prevReason: any = undefined
 /**
  * 初始化错误追踪机制
  */
-export function initialErrorTrack(store: PageStore) {
+export function initialErrorTracker(store: PageStore) {
   if (isInitialized) {
     return
   }
