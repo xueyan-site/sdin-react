@@ -12,7 +12,7 @@ import type { RouteQuery, RouteUrl } from './route'
  */
 export interface PageMeta {
   /**
-   * page id, page url suffix path, no '/'
+   * page id
    */
   id: string
   /**
@@ -20,15 +20,15 @@ export interface PageMeta {
    */
   name: string
   /**
-   * page url full path, has '/'
+   * page url full path, start with '/'
    */
   pagePath: string
   /**
-   * project url public path, has '/'
+   * page url public path, start and end with '/'
    */
   publicPath: string
   /**
-   * page url suffix path, has '/'
+   * page url suffix path, not start with '/'
    */
   privatePath: string
 }
