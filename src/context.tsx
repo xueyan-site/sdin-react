@@ -1,8 +1,9 @@
 import React, { useEffect, createElement } from 'react'
 import { useData, useStore } from 'xueyan-react-store'
-import { PageStore, PAGE_STORE_KEY } from './page'
+import { PageStore } from './page'
 import { stringToUrl } from './route'
 import { ErrorBoundary, initialErrorTracker } from './error'
+import { PAGE_STORE_KEY } from './constants'
 import type { PageData } from './page'
 
 /**
