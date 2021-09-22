@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react'
-import { uniqueId } from 'lodash'
+import { random } from 'xueyan-react-store'
 import { usePager } from './context'
 import 'intersection-observer'
 
@@ -47,7 +47,7 @@ export function Impression({
   ...extra
 }: ImpressionProps) {
   const pager = usePager()
-  const currId = useMemo(() => id || uniqueId('impr_'), [])
+  const currId = useMemo(() => id || ('impr_' + random()), [])
 
   useEffect(() => {
     let timer: any

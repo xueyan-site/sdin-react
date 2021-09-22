@@ -2,7 +2,7 @@ import Store from 'xueyan-react-store'
 import { track } from './track'
 import { getPerfLog } from './performance'
 import { stringToUrl, urlToString } from './route'
-import { TRACK_JOIN_SYMBOL, REFERENCE_JOIN_SYMBOL } from './constants'
+import { TRACK_JOIN_SYMBOL, REFERENCE_JOIN_SYMBOL, PAGE_STORE_KEY } from './constants'
 import type { StoreOptions } from 'xueyan-react-store'
 import type { TrackParams, Track } from './track'
 import type { RouteQuery, RouteUrl } from './route'
@@ -47,8 +47,6 @@ export interface PageOptions extends StoreOptions {
    */
   track?: Track
 }
-
-export const PAGE_STORE_KEY = 'PAGE'
 
 /**
  * page store
