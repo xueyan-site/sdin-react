@@ -1,22 +1,6 @@
 # xueyan-react
 
-`xueyan-react` is a react application tools for xueyan-typescript-cli.  
-
-- [xueyan-react](#xueyan-react)
-  - [Why use it](#why-use-it)
-  - [What are its highlights](#what-are-its-highlights)
-  - [How to use it](#how-to-use-it)
-  - [Interface](#interface)
-  - [Develop](#develop)
-  - [Appendix](#appendix)
-
-## Why use it
-
-## What are its highlights
-
-## How to use it
-
-## Interface
+Please see <https://xueyan.site/xueyan-react>.
 
 ## Develop
 
