@@ -1,45 +1,30 @@
-import React, { useEffect, createElement } from 'react'
-import { useData, useStore } from 'xueyan-react-store'
-import { PageStore } from './page'
-import { stringToUrl } from './route'
+import React, { useEffect, createContext, useContext, useMemo } from 'react'
 import { ErrorBoundary, initialErrorTracker } from './error'
-import { PAGE_STORE_KEY } from './constants'
-import type { PageData } from './page'
+import Page from './page'
+
+/**
+ * 页面的Store
+ */
+let pageCache: Page | undefined
+let pageContext: React.Context<Page> | undefined
+let pageClosed: (() => void) | undefined
+
+if (!(pageCache  && pageContext)) {
+  pageCache = new Page((window as any).XT_PAGE)
+  delete (window as any).XT_PAGE;
+  pageContext = createContext<Page>(pageCache)
+  pageClosed = initialErrorTracker(pageCache)
+}
 
 /**
  * page data hook
  */
 export function usePage() {
-  return useData<PageData>(PAGE_STORE_KEY)
-}
-
-/**
- * page store hook
- */
-export function usePager() {
-  return useStore<PageStore>(PAGE_STORE_KEY)
+  return useContext<Page>(pageContext as any)
 }
 
 export interface PageProps {
-  pager: PageStore,
-  page: PageData
-}
-
-/**
- * 页面的Store
- */
-let store: PageStore = undefined as any
-
-/**
- * 创建store，以及初始化错误追踪机制
- */
-if (!store) {
-  store = new PageStore(Object.assign(
-    (window as any).XT_PAGE, 
-    stringToUrl(location.href)
-  ))
-  delete (window as any).XT_PAGE;
-  initialErrorTracker(store)
+  page: Page
 }
 
 /**
@@ -52,12 +37,28 @@ export function PageProvider({
 }: {
   Content: React.ComponentType<PageProps>
 }) {
-  useEffect(() => store.trackPv(), [])
-  return createElement(store.Provider, {
-    children: props => (
-      <ErrorBoundary store={props.store as any}>
-        <Content page={props.data} pager={props.store as any} />
+  const [page, Context, remove] = useMemo(() => {
+    if (pageCache && pageContext && pageClosed) {
+      return [pageCache, pageContext, pageClosed]
+    } else {
+      const page = new Page((window as any).XT_PAGE)
+      delete (window as any).XT_PAGE;
+      const context = createContext<Page>(page)
+      const remove = initialErrorTracker(page)
+      return [page, context, remove]
+    }
+  }, [])
+
+  useEffect(() => {
+    page.tracker.pv()
+    return remove
+  }, [])
+
+  return (
+    <Context.Provider value={page}>
+      <ErrorBoundary page={page}>
+        <Content page={page} />
       </ErrorBoundary>
-    )
-  })
+    </Context.Provider>
+  )
 }
