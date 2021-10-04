@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react'
 import { random } from 'xueyan-react-store'
-import { usePager } from './context'
+import { usePage } from './context'
 import 'intersection-observer'
 
 /**
@@ -46,7 +46,7 @@ export function Impression({
   children,
   ...extra
 }: ImpressionProps) {
-  const pager = usePager()
+  const page = usePage()
   const currId = useMemo(() => id || ('impr_' + random()), [])
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export function Impression({
         if (target) {
           observer = new IntersectionObserver(entries => entries.forEach(entry => {
             if (entry.intersectionRatio > ratio && observer) {
-              pager.trackImpr(sn, extra)
+              page.tracker.impr(sn, extra)
               observer.disconnect()
               observer = undefined
             }

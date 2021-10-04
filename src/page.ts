@@ -1,11 +1,7 @@
-import Store from 'xueyan-react-store'
-import { track } from './track'
-import { getPerfLog } from './performance'
-import { stringToUrl, urlToString } from './route'
-import { TRACK_JOIN_SYMBOL, REFERENCE_JOIN_SYMBOL, PAGE_STORE_KEY } from './constants'
-import type { StoreOptions } from 'xueyan-react-store'
-import type { TrackParams, Track } from './track'
-import type { RouteQuery, RouteUrl } from './route'
+import { random } from 'xueyan-react-store'
+import { RouteStringQuery, stringToUrl } from './route-utils'
+import Router from './router'
+import Tracker from './tracker'
 
 /**
  * page meta
@@ -34,231 +30,112 @@ export interface PageMeta {
 }
 
 /**
- * page data
+ * page
  */
-export interface PageData extends RouteUrl, PageMeta {}
-
-/**
- * page config options
- */
-export interface PageOptions extends StoreOptions {
+export default class Page {
   /**
-   * custom define tracking method
+   * page id
    */
-  track?: Track
-}
-
-/**
- * page store
- */
-export class PageStore extends Store<PageData> {
-  /**
-   * track method
-   */
-  private __track__: Track
-
-  constructor(defaultData: PageData, options?: PageOptions) {
-    super(PAGE_STORE_KEY, defaultData, options)
-    this.__track__ = options?.track || track
-  }
+  readonly id: string
 
   /**
-   * format path to full URL
-   * 
-   * It will fill in the missing domain name for the given URL, ensuring that the URL parameters are encoded
-   * 
-   * @example
-   * formatUrl('/foo', { bar: 123 })
+   * page name
    */
-  formatUrl(urlOrStr: string | RouteUrl, { sn, sid, sidx, ...query }: RouteQuery = {}) {
-    const url = typeof urlOrStr === 'string' ? stringToUrl(urlOrStr, query) : urlOrStr
-    url.query.r = [this.id, sn, sid, sidx].join(REFERENCE_JOIN_SYMBOL)
-    return urlToString(url)
-  }
+  readonly name: string
 
   /**
-   * modify current URL (by change location.href)
-   * 
-   * @example
-   * changeUrl('/foo', { bar: 123 })
+   * page url full path, start with '/'
    */
-  changeUrl(url: string | RouteUrl, query?: RouteQuery) {
-    location.href = this.formatUrl(url, query)
-  }
+  readonly pagePath: string
 
   /**
-   * replace current URL (by change location.href)
-   * 
-   * @example
-   * replaceUrl('/foo', { bar: 123 })
+   * page url public path, start and end with '/'
    */
-  replaceUrl(url: string | RouteUrl, query?: RouteQuery) {
-    location.replace(this.formatUrl(url, query))
-  }
+  readonly publicPath: string
 
   /**
-   * open URL (by click \<a\> DOM)
-   * 
-   * @param target The way to open (i.e. the target attribute of the a link) @default 'blank'
-   * self: Current page load, i.e. the current response to the same HTML 4 frame (or HTML5 browsing context). This value is the default, if no attribute is specified.
-   * blank: New window opens, i.e. to a new unnamed HTML4 window or HTML5 browser context
-   * parent: Loads the response to the parent HTML4 frame of the current frame or the parent browsing context of the current HTML5 browsing context. If there is no parent frame or browsing context, this option behaves in the same way as _self.
-   * top: IHTML4: Loads the response into the full, original window, eliminating all other frames. HTML5: Loads the response into the top-level browsing context (i.e., the browsing context, which is an ancestor of the current one, and has no parent). If there is no parent frame or browsing context, this option behaves the same way as _self
-   * 
-   * @example
-   * openUrl('/foo', { bar: 123 })
+   * page url suffix path, not start with '/'
    */
-  openUrl(url: string | RouteUrl, query?: RouteQuery, target: 'blank' | 'self' | 'parent' | 'top' = 'blank') {
-    const anchorDom = document.createElement('a')
-    anchorDom.setAttribute('href', this.formatUrl(url, query))
-    anchorDom.setAttribute('target', '_' + target)
-    anchorDom.click()
-  }
+  readonly privatePath: string
 
   /**
-   * add history record
-   * 
-   * @example
-   * pushHistory('/foo', { bar: 123 })
+   * current view id
    */
-  pushHistory(url: string | RouteUrl, query?: RouteQuery) {
-    history.pushState(undefined, '', this.formatUrl(url, query))
-  }
+  readonly viewId: string
 
   /**
-   * replace history record
-   * 
-   * @example
-   * replaceHistory('/foo', { bar: 123 })
+   * @example 'https://xxx.yy:zz/aa/bb/cc?mm=11&n=22#tt'
    */
-  replaceHistory(url: string | RouteUrl, query?: RouteQuery) {
-    history.replaceState(undefined, '', this.formatUrl(url, query))
-  }
+  readonly url: string
 
   /**
-   * back history record
-   * 
-   * @example
-   * backHistory()
+   * @example 'https://xxx.yy:zz'
    */
-  backHistory(delta: number = 1) {
-    history.go(-delta)
-  }
+  readonly domain: string
 
   /**
-   * forward history record
-   * 
-   * @example
-   * forwardHistory()
+   * a plain object
+   * @example {mm:11,n:22}
    */
-  forwardHistory(delta: number = 1) {
-    history.go(delta)
-  }
+  readonly query: RouteStringQuery
 
   /**
-   * get tracking main information
-   * @param action tracking action, such as click, impr, pv, etc.
-   * @param sn scene number, A custom string to distinguish burying site
-   * 
-   * contains following information:
-   * - action  tracking action, such as click, impr, pv, etc.
-   * - sn      scene number
-   * - project project name
-   * - view    view id, current view page flag, a random string
-   * - id      page id
-   * - path    url path
-   * - search  url search string
-   * - hash    url hash
-   * - refer   page refer
+   * no '://'
+   * @example 'https'
    */
-  private getTrackMeta(action: string, sn?: string) {
-    return [
-      action,
-      sn || '',
-      this.id,
-      this.data.id,
-      this.data.path,
-      this.data.search,
-      this.data.hash,
-      this.data.query.r || ''
-    ].join(TRACK_JOIN_SYMBOL)
-  }
+  readonly protocol: string
 
   /**
-   * base track method
-   * @param action tracking action, such as click, impr, pv, etc.
-   * @param sn scene number, A custom string to distinguish burying site
-   * @param params tracking other params
+   * no 'https://', has port
+   * @example 'xxx.yy:zz'
    */
-  private track(action: string, sn?: string, params?: TrackParams) {
-    this.__track__({
-      t: this.getTrackMeta(action, sn),
-      ...params,
-    })
-  }
+  readonly host: string
 
   /**
-   * page view tracking (with performace data)
-   * @param data tracking data
+   * has '/'
+   * @example '/aa/bb/cc'
    */
-  trackPv(data?: TrackParams) {
-    this.track('pv', undefined, {
-      p: getPerfLog(),
-      d: data,
-    })
-  }
+  readonly path: string
 
   /**
-   * impression tracking
-   * @param sn scene number, A custom string to distinguish burying site
-   * @param data tracking data
+   * no '?'
+   * @example 'mm=11&n=22'
    */
-  trackImpr(sn: string, data?: TrackParams) {
-    if (sn) {
-      this.track('ips', sn, {
-        d: data
-      })
-    }
-  }
+  readonly search: string
 
   /**
-   * click action tracking
-   * @param sn scene number, A custom string to distinguish burying site
-   * @param data tracking data
+   * no '#'
+   * @example 'tt'  
    */
-  trackClick(sn: string, data?: TrackParams) {
-    if (sn) {
-      this.track('clk', sn, {
-        d: data
-      })
-    }
-  }
+  readonly hash: string
 
   /**
-   * information tracking
-   * @param info information data
-   * @param data other tracking data
+   * router object
    */
-  trackInfo(info?: any, data?: TrackParams) {
-    if (info) {
-      this.track('inf', undefined, {
-        i: info,
-        d: data,
-      })
-    }
-  }
+  readonly router: Router
 
   /**
-   * error tracking
-   * @param error error data
-   * @param data other tracking data
+   * tracker object
    */
-  trackError(error?: Error, data?: TrackParams) {
-    if (error) {
-      this.track('err', undefined, {
-        e: error,
-        d: data,
-      })
-    }
+  readonly tracker: Tracker
+  
+  constructor(meta: PageMeta) {
+    this.id = meta.id
+    this.name = meta.name
+    this.pagePath = meta.pagePath
+    this.publicPath = meta.publicPath
+    this.privatePath = meta.privatePath
+    this.viewId = random()
+    const url = stringToUrl(location.href)
+    this.url = url.url
+    this.domain = url.domain
+    this.query = url.query
+    this.protocol = url.protocol
+    this.host = url.host
+    this.path = url.path
+    this.search = url.search
+    this.hash = url.hash
+    this.router = new Router({ page: this })
+    this.tracker = new Tracker({ page: this })
   }
 }
