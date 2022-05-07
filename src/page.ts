@@ -1,7 +1,7 @@
 import { random } from 'xueyan-react-store'
 import { RouteStringQuery, stringToUrl } from './route-utils'
-import Router from './router'
-import Tracker from './tracker'
+import { Router } from './router'
+import { Tracker } from './tracker'
 
 /**
  * page meta
@@ -32,7 +32,7 @@ export interface PageMeta {
 /**
  * page
  */
-export default class Page {
+export class Page {
   /**
    * page id
    */

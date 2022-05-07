@@ -1,6 +1,6 @@
 import React, { useEffect, createContext, useContext, useMemo } from 'react'
 import { ErrorBoundary, initialErrorTracker } from './error'
-import Page from './page'
+import { Page } from './page'
 
 /**
  * 页面的Store

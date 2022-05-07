@@ -7,17 +7,12 @@ import type { DocumentInfo } from 'xueyan-react-doc'
 const DOCUMENTS: DocumentInfo<string,string>[] = [
   {
     value: 'a',
-    label: '集一',
+    label: 'collection 1',
     contents: [
       {
         value: 'aa',
-        label: '章一 介绍',
+        label: 'chapter 1: introduction',
         content: () => import('./aa-introduction')
-      },
-      {
-        value: 'ab',
-        label: '章二 快速开始',
-        content: () => import('./ab-start')
       }
     ]
   }
@@ -27,11 +22,11 @@ export default function Index(props: PageProps) {
   return (
     <PageDoc 
       {...props}
-      language="zh"
+      language="en"
       version={pkg.version}
       documents={DOCUMENTS}
       name={pkg.name}
-      description="中文介绍"
+      description="English description"
     />
   )
 }

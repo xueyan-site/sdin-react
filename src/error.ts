@@ -1,6 +1,6 @@
 import { Component } from 'react'
 import type { ErrorInfo } from 'react'
-import type Page from './page'
+import type { Page } from './page'
 
 interface ErrorBoundaryProps {
   page: Page

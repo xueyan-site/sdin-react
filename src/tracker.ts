@@ -1,4 +1,4 @@
-import Page from './page'
+import { Page } from './page'
 import { TRACK_JOIN_SYMBOL } from './constants'
 import { track, getPerfLog } from './track-utils'
 import type { TrackParams } from './track-utils'
@@ -7,7 +7,7 @@ interface TrackerProps {
   page: Page
 }
 
-export default class Tracker {
+export class Tracker {
   /**
    * page information
    */

@@ -1,21 +1,20 @@
 {
   "name": "xueyan-react",
-  "version": "1.4.0",
-  "author": "xueyan-site <yang@xueyan.site>",
-  "license": "MIT",
-  "description": "React Application Tools for xueyan-typescript-cli",
+  "version": "1.5.0",
+  "author": "xueyan-site <xueyan@xueyan.site>",
+  "license": "LGPL-3.0",
+  "description": "react application utils for xueyan-typescript-cli",
   "main": "dist/node",
   "types": "dist/def",
   "module": "dist/web",
   "keywords": [
-    "react",
     "page",
+    "react",
     "router",
-    "tracking",
-    "application",
     "xueyan",
-    "xueyan-typescript-cli",
-    "typescript"
+    "typescript",
+    "application",
+    "xueyan-typescript-cli"
   ],
   "repository": {
     "type": "git",
@@ -26,15 +25,12 @@
   ],
   "scripts": {
     "start": "xt start",
-    "build": "xt build",
-    "start-doc": "xt start doc",
-    "build-doc": "xt build doc",
-    "serve-doc": "xt serve doc"
+    "build": "xt build"
   },
   "dependencies": {
     "@babel/runtime": "^7.12.5",
     "intersection-observer": "^0.12.0",
-    "xueyan-react-store": "^2.0.6"
+    "xueyan-react-store": "^2.2.0"
   },
   "peerDependencies": {
     "react": ">=16.8.0"

@@ -1,4 +1,4 @@
-import Page from './page'
+import { Page } from './page'
 import { REFERENCE_JOIN_SYMBOL } from './constants'
 import { stringToUrl, urlToString } from './route-utils'
 import type { RouteUrl, RouteQuery } from './route-utils'
@@ -7,7 +7,7 @@ interface RouterProps {
   page: Page
 }
 
-export default class Router {
+export class Router {
   /**
    * page information
    */
