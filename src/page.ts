@@ -3,120 +3,66 @@ import { RouteStringQuery, stringToUrl } from './route-utils'
 import { Router } from './router'
 import { Tracker } from './tracker'
 
-/**
- * page meta
- */
 export interface PageMeta {
-  /**
-   * page id
-   */
+  /** 页面ID */
   id: string
-  /**
-   * page name
-   */
+  /** 页面名称 */
   name: string
-  /**
-   * page url full path, start with '/'
-   */
+  /** 预设的页面路径（以 / 开始，不以 / 结尾，比如 /aa/bb/cc）*/
   pagePath: string
-  /**
-   * page url public path, start and end with '/'
-   */
+  /** 预设的页面路径前缀（以 / 开始，以 / 结尾，比如 /aa/bb/）*/
   publicPath: string
-  /**
-   * page url suffix path, not start with '/'
-   */
+  /** 预设的页面路径后缀（不以 / 开始，不以 / 结尾，比如 cc）*/
   privatePath: string
 }
 
-/**
- * page
- */
 export class Page {
-  /**
-   * page id
-   */
+  /** 页面ID */
   readonly id: string
 
-  /**
-   * page name
-   */
+  /** 页面名称 */
   readonly name: string
 
-  /**
-   * page url full path, start with '/'
-   */
-  readonly pagePath: string
-
-  /**
-   * page url public path, start and end with '/'
-   */
-  readonly publicPath: string
-
-  /**
-   * page url suffix path, not start with '/'
-   */
-  readonly privatePath: string
-
-  /**
-   * current view id
-   */
+  /** 页面访问ID（用于打点统计） */
   readonly viewId: string
 
-  /**
-   * @example 'https://xxx.yy:zz/aa/bb/cc?mm=11&n=22#tt'
-   */
+  /** 页面 URL （比如 https://xxx.yy:zz/aa/bb/cc?mm=11&n=22#tt）*/
   readonly url: string
 
-  /**
-   * @example 'https://xxx.yy:zz'
-   */
+  /** 页面 URL 中的协议+域名（比如 https://xxx.yy:zz）*/
   readonly domain: string
 
-  /**
-   * a plain object
-   * @example {mm:11,n:22}
-   */
-  readonly query: RouteStringQuery
-
-  /**
-   * no '://'
-   * @example 'https'
-   */
+  /** 页面 URL 中的协议（比如 https，没有 ://）*/
   readonly protocol: string
 
-  /**
-   * no 'https://', has port
-   * @example 'xxx.yy:zz'
-   */
+  /** 页面 URL 中的域名+端口（比如 xxx.yy:zz，没有协议前缀）*/
   readonly host: string
 
-  /**
-   * has '/'
-   * @example '/aa/bb/cc'
-   */
+  /** 页面 URL 中的路径（以 / 开始，比如 /aa/bb/cc/）*/
   readonly path: string
 
-  /**
-   * no '?'
-   * @example 'mm=11&n=22'
-   */
+  /** 预设的页面路径（以 / 开始，不以 / 结尾，比如 /aa/bb/cc）*/
+  readonly pagePath: string
+
+  /** 预设的页面路径前缀（以 / 开始，以 / 结尾，比如 /aa/bb/）*/
+  readonly publicPath: string
+
+  /** 预设的页面路径后缀（不以 / 开始，不以 / 结尾，比如 cc）*/
+  readonly privatePath: string
+  
+  /** 页面 URL 中的查询对象（比如 {mm:11,n:22}）*/
+  readonly query: RouteStringQuery
+
+  /** 页面 URL 中的查询字符串（比如 mm=11&n=22，没有 ?）*/
   readonly search: string
 
-  /**
-   * no '#'
-   * @example 'tt'  
-   */
+  /** 页面 URL 中的 Hash 字符串（比如 tt，没有 #）*/
   readonly hash: string
 
-  /**
-   * router object
-   */
+  /** 路由对象 */
   readonly router: Router
 
-  /**
-   * tracker object
-   */
+  /** 打点对象 */
   readonly tracker: Tracker
   
   constructor(meta: PageMeta) {

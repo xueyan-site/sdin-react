@@ -8,9 +8,7 @@ interface RouterProps {
 }
 
 export class Router {
-  /**
-   * page information
-   */
+  /** 当前路由所属的 page 对象 */
   readonly page: Page
 
   constructor(props: RouterProps) {
@@ -18,9 +16,8 @@ export class Router {
   }
 
   /**
-   * format path to full URL
-   * 
-   * It will fill in the missing domain name for the given URL, ensuring that the URL parameters are encoded
+   * 将字符串格式化成标准的 URL 字符串
+   * 它会补齐传入的字符串中缺失的部分，并确保 URL 查询参数都进行了编码
    * 
    * @example
    * formatUrl('/foo', { bar: 123 })
@@ -32,27 +29,27 @@ export class Router {
   }
 
   /**
-   * modify current URL (by change location.href)
+   * 改变当前 URL (通过修改 location.href)
    * 
    * @example
    * changeUrl('/foo', { bar: 123 })
    */
-  changeUrl(url: string | RouteUrl, query?: RouteQuery) {
-    location.href = this.formatUrl(url, query)
+  changeUrl(urlOrStr: string | RouteUrl, query?: RouteQuery) {
+    location.href = this.formatUrl(urlOrStr, query)
   }
 
   /**
-   * replace current URL (by change location.href)
+   * 替换当前 URL (通过 location.replace 方法)
    * 
    * @example
    * replaceUrl('/foo', { bar: 123 })
    */
-  replaceUrl(url: string | RouteUrl, query?: RouteQuery) {
-    location.replace(this.formatUrl(url, query))
+  replaceUrl(urlOrStr: string | RouteUrl, query?: RouteQuery) {
+    location.replace(this.formatUrl(urlOrStr, query))
   }
 
   /**
-   * open URL (by click \<a\> DOM)
+   * 打开一个新的 URL (通过点击 \<a\> 元素)
    * 
    * @param target The way to open (i.e. the target attribute of the a link) @default 'blank'
    * self: Current page load, i.e. the current response to the same HTML 4 frame (or HTML5 browsing context). This value is the default, if no attribute is specified.
@@ -63,50 +60,50 @@ export class Router {
    * @example
    * openUrl('/foo', { bar: 123 })
    */
-  openUrl(url: string | RouteUrl, query?: RouteQuery, target: 'blank' | 'self' | 'parent' | 'top' = 'blank') {
+  openUrl(urlOrStr: string | RouteUrl, query?: RouteQuery, target: 'blank' | 'self' | 'parent' | 'top' = 'blank') {
     const anchorDom = document.createElement('a')
-    anchorDom.setAttribute('href', this.formatUrl(url, query))
+    anchorDom.setAttribute('href', this.formatUrl(urlOrStr, query))
     anchorDom.setAttribute('target', '_' + target)
     anchorDom.click()
   }
 
   /**
-   * add history record
+   * 添加一条 URL 记录
    * 
    * @example
    * push('/foo', { bar: 123 })
    */
-  push(url: string | RouteUrl, query?: RouteQuery) {
-    history.pushState(undefined, '', this.formatUrl(url, query))
+  push(urlOrStr: string | RouteUrl, query?: RouteQuery) {
+    history.pushState(undefined, '', this.formatUrl(urlOrStr, query))
   }
 
   /**
-   * replace history record
+   * 替换当前 URL 记录
    * 
    * @example
    * replace('/foo', { bar: 123 })
    */
-  replace(url: string | RouteUrl, query?: RouteQuery) {
-    history.replaceState(undefined, '', this.formatUrl(url, query))
+  replace(urlOrStr: string | RouteUrl, query?: RouteQuery) {
+    history.replaceState(undefined, '', this.formatUrl(urlOrStr, query))
   }
 
   /**
-   * back history record
-   * 
-   * @example
-   * back()
-   */
-  back(delta: number = 1) {
-    history.go(-delta)
-  }
-
-  /**
-   * forward history record
+   * 跳转至后几条 URL 记录
    * 
    * @example
    * forward()
    */
   forward(delta: number = 1) {
     history.go(delta)
+  }
+
+  /**
+   * 回退至前几条 URL 记录
+   * 
+   * @example
+   * back()
+   */
+  back(delta: number = 1) {
+    history.go(-delta)
   }
 }

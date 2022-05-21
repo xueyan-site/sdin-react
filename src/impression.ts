@@ -7,31 +7,20 @@ import 'intersection-observer'
  * Props for Impression Component
  */
 export interface ImpressionProps {
-  [key: string]: any
-  /**
-   * The callback function is triggered when the intersectionRatio reaches thresholds
-   */
+  /** 曝光行为触发的时机（监听目标与边界盒交叉区域的比例值，范围 [0,1]）*/
   thresholds?: number | number[]
-  /**
-   * Visibility ratio of the target element, 1 when fully visible, less than or equal to 0 when fully invisible
-   */
+  /** 打点行为触发的时机（监听目标的 intersectionRect 与 boundingClientRect 的比例值，范围 [0,1]） */
   intersectionRatio?: number
-  /**
-   * Set the element's dependencies so that punches can be refreshed when they are changed
-   */
+  /** 打点的依赖项（当依赖的数据变动时，会重新执行曝光判断，否则只曝光一次） */
   deps?: any[]
-  /**
-   * element's ID, if any, is passed to children as a selector, otherwise it is automatically generated
-   */
+  /** 曝光元素的ID（不传则由组件内部自动生成） */
   id?: string
-  /**
-   * The element's tracking key, if not passed, is not send tracking data
-   */
+  /** 打点的场景标识（不传则不打点） */
   sn?: string
-  /**
-   * React component children, There is and only one DOM
-   */
+  /** 子组件（仅允许传一个元素）*/
   children: React.ReactElement
+  /** 其它打点数据 */
+  [key: string]: any
 }
 
 /**

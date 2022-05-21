@@ -2,22 +2,32 @@ import React from 'react'
 import { PageDoc } from 'com/page-doc'
 import pkg from '../../../package.json'
 import type { PageProps } from 'xueyan-react'
-import type { DocumentInfo } from 'xueyan-react-doc'
+import type { Collection } from 'xueyan-react-doc'
 
-const DOCUMENTS: DocumentInfo<string,string>[] = [
+const COLLECTIONS: Collection<string,string>[] = [
   {
-    value: 'a',
-    label: '集一',
+    value: '9999',
+    label: '接口文档',
     contents: [
       {
-        value: 'aa',
-        label: '章一 介绍',
-        content: () => import('./aa-introduction')
+        value: '0001',
+        label: 'usePage hook',
+        content: () => import('./0001')
       },
       {
-        value: 'ab',
-        label: '章二 快速开始',
-        content: () => import('./ab-start')
+        value: '0003',
+        label: 'Router 对象',
+        content: () => import('./0003')
+      },
+      {
+        value: '0004',
+        label: 'Tracker 对象',
+        content: () => import('./0004')
+      },
+      {
+        value: '0002',
+        label: 'Impression 组件',
+        content: () => import('./0002')
       }
     ]
   }
@@ -29,9 +39,9 @@ export default function Index(props: PageProps) {
       {...props}
       language="zh"
       version={pkg.version}
-      documents={DOCUMENTS}
+      collections={COLLECTIONS}
       name={pkg.name}
-      description="中文介绍"
+      description={pkg.description}
     />
   )
 }
