@@ -3,30 +3,68 @@ import { PageDoc } from 'com/page-doc'
 import pkg from '../../../package.json'
 import type { PageProps } from 'xueyan-react'
 import type { Collection } from 'xueyan-react-doc'
+import { 
+  ConfigIcon,
+  InterfaceIcon,
+  ConstIcon,
+  ClassIcon,
+  HookFunctionIcon,
+  ComponentIcon,
+  FunctionIcon
+} from 'xueyan-react-icon'
+
+const INTERFACE_ICON = <InterfaceIcon color="var(--pink)"/>
+const CONFIG_ICON = <ConfigIcon color="var(--indigo)"/>
+const CONST_ICON = <ConstIcon color="var(--teal)"/>
+const FUNCTION_ICON = <FunctionIcon color="var(--orange)" />
+const CLASS_ICON = <ClassIcon color="var(--red)" />
+const HOOK_ICON = <HookFunctionIcon color="var(--green)" />
+const COMPONENT_ICON = <ComponentIcon color="var(--blue)" />
 
 const COLLECTIONS: Collection<string,string>[] = [
   {
     value: '9999',
+    label: '指南',
+    contents: [
+      {
+        value: '0006',
+        label: '用法',
+        content: () => import('./0006')
+      }
+    ]
+  },
+  {
+    value: '9998',
     label: '接口文档',
     contents: [
       {
         value: '0001',
-        label: 'usePage hook',
+        label: 'usePage',
+        icon: HOOK_ICON,
         content: () => import('./0001')
       },
       {
+        value: '0005',
+        label: 'Page',
+        icon: CLASS_ICON,
+        content: () => import('./0005')
+      },
+      {
         value: '0003',
-        label: 'Router 对象',
+        label: 'Router',
+        icon: CLASS_ICON,
         content: () => import('./0003')
       },
       {
         value: '0004',
-        label: 'Tracker 对象',
+        label: 'Tracker',
+        icon: CLASS_ICON,
         content: () => import('./0004')
       },
       {
         value: '0002',
-        label: 'Impression 组件',
+        label: 'Impression',
+        icon: COMPONENT_ICON,
         content: () => import('./0002')
       }
     ]

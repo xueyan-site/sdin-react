@@ -2,18 +2,18 @@ import React from 'react'
 import { Article, Segment } from 'xueyan-react-markdown'
 
 const MARK1 = `
-\`\`\`ts
+对元素的可视区域进行监听及曝光
+
+\`\`\`
 type Impression = (
   props: ImpressionProps
 ) => React.ReactElement<any, any>
 \`\`\`
 
-对元素的可视区域进行监听及曝光
-
 ## 示例
 
-\`\`\`tsx
-// 相当于 page.tracker.impr('foo', { bar: 123 })
+\`\`\`
+// 相当于 tracker.impr('foo', { bar: 123 })
 <Impression sn="foo" bar={123}>
   <div></div>
 </Impression>

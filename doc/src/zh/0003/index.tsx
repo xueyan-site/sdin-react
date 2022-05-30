@@ -10,47 +10,50 @@ const MARK1 = `
 
 ## Router.formatUrl
 
-\`\`\`ts
+将字符串格式化成标准的 URL 字符串  
+
+\`\`\`
 type formatUrl = (
   urlOrStr: string | RouteUrl, 
   query: RouteQuery = {}
 ) => string
 \`\`\`
 
-将字符串格式化成标准的 URL 字符串  
 它会补齐传入的字符串中缺失的部分，并确保 URL 查询参数都进行了编码  
 
 \`router.formatUrl('/foo', { bar: 123 })\`
 
 ## Router.changeUrl
 
-\`\`\`ts
+改变当前 URL (通过修改 location.href)  
+
+\`\`\`
 type changeUrl = (
   urlOrStr: string | RouteUrl,
   query?: RouteQuery
 ) => void
 \`\`\`
 
-改变当前 URL (通过修改 location.href)  
-
 \`router.changeUrl('/foo', { bar: 123 })\`
 
 ## Router.replaceUrl
 
-\`\`\`ts
+替换当前 URL (通过 location.replace 方法)
+
+\`\`\`
 type replaceUrl = (
   urlOrStr: string | RouteUrl,
   query?: RouteQuery
 ) => void
 \`\`\`
 
-替换当前 URL (通过 location.replace 方法)
-
 \`router.replaceUrl('/foo', { bar: 123 })\`
 
 ## Router.openUrl
 
-\`\`\`ts
+打开一个新的 URL (通过点击 \<a\> 元素)
+
+\`\`\`
 type openUrl = (
   urlOrStr: string | RouteUrl, 
   query?: RouteQuery, 
@@ -58,57 +61,55 @@ type openUrl = (
 ) => void
 \`\`\`
 
-打开一个新的 URL (通过点击 \<a\> 元素)
-
 \`router.openUrl('/foo', { bar: 123 })\`
 
 ## Router.push
 
-\`\`\`ts
+添加一条 URL 记录
+
+\`\`\`
 type push = (
   urlOrStr: string | RouteUrl, 
   query?: RouteQuery
 ) => void
 \`\`\`
 
-添加一条 URL 记录
-
 \`router.push('/foo', { bar: 123 })\`
 
 ## Router.replace
 
-\`\`\`ts
+替换当前 URL 记录
+
+\`\`\`
 type replace = (
   urlOrStr: string | RouteUrl, 
   query?: RouteQuery
 ) => void
 \`\`\`
 
-替换当前 URL 记录
-
 \`router.replace('/foo', { bar: 123 })\`
 
 ## Router.forward
 
-\`\`\`ts
+跳转至后几条 URL 记录
+
+\`\`\`
 type forward = (
   delta: number = 1
 ) => void
 \`\`\`
 
-跳转至后几条 URL 记录
-
 \`router.forward()\`
 
 ## Router.back
 
-\`\`\`ts
+回退至前几条 URL 记录
+
+\`\`\`
 type back = (
   delta: number = 1
 ) => void
 \`\`\`
-
-回退至前几条 URL 记录
 
 \`router.back()\`
 `

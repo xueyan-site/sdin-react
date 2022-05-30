@@ -22,7 +22,10 @@ export class Router {
    * @example
    * formatUrl('/foo', { bar: 123 })
    */
-  formatUrl(urlOrStr: string | RouteUrl, { sn, sid, sidx, ...query }: RouteQuery = {}) {
+  formatUrl(
+    urlOrStr: string | RouteUrl = this.page.path, 
+    { sn, sid, sidx, ...query }: RouteQuery = {}
+  ) {
     const url = typeof urlOrStr === 'string' ? stringToUrl(urlOrStr, query) : urlOrStr
     url.query.r = [this.page.viewId, sn, sid, sidx].join(REFERENCE_JOIN_SYMBOL)
     return urlToString(url)
@@ -34,7 +37,7 @@ export class Router {
    * @example
    * changeUrl('/foo', { bar: 123 })
    */
-  changeUrl(urlOrStr: string | RouteUrl, query?: RouteQuery) {
+  changeUrl(urlOrStr?: string | RouteUrl, query?: RouteQuery) {
     location.href = this.formatUrl(urlOrStr, query)
   }
 
@@ -44,7 +47,7 @@ export class Router {
    * @example
    * replaceUrl('/foo', { bar: 123 })
    */
-  replaceUrl(urlOrStr: string | RouteUrl, query?: RouteQuery) {
+  replaceUrl(urlOrStr?: string | RouteUrl, query?: RouteQuery) {
     location.replace(this.formatUrl(urlOrStr, query))
   }
 
@@ -60,7 +63,11 @@ export class Router {
    * @example
    * openUrl('/foo', { bar: 123 })
    */
-  openUrl(urlOrStr: string | RouteUrl, query?: RouteQuery, target: 'blank' | 'self' | 'parent' | 'top' = 'blank') {
+  openUrl(
+    urlOrStr?: string | RouteUrl, 
+    query?: RouteQuery, 
+    target: 'blank' | 'self' | 'parent' | 'top' = 'blank'
+  ) {
     const anchorDom = document.createElement('a')
     anchorDom.setAttribute('href', this.formatUrl(urlOrStr, query))
     anchorDom.setAttribute('target', '_' + target)
@@ -73,7 +80,7 @@ export class Router {
    * @example
    * push('/foo', { bar: 123 })
    */
-  push(urlOrStr: string | RouteUrl, query?: RouteQuery) {
+  push(urlOrStr?: string | RouteUrl, query?: RouteQuery) {
     history.pushState(undefined, '', this.formatUrl(urlOrStr, query))
   }
 
@@ -83,7 +90,7 @@ export class Router {
    * @example
    * replace('/foo', { bar: 123 })
    */
-  replace(urlOrStr: string | RouteUrl, query?: RouteQuery) {
+  replace(urlOrStr?: string | RouteUrl, query?: RouteQuery) {
     history.replaceState(undefined, '', this.formatUrl(urlOrStr, query))
   }
 
