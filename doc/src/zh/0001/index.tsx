@@ -8,7 +8,7 @@ const MARK1 = `
 type usePage = () => Page
 \`\`\`
 
-> 更多类型定义：[Page](${XT_PATH}?doc=0005)
+> 更多类型定义：[Page](?doc=0005)
 `
 
 export default function Main() {

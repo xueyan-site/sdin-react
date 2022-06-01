@@ -8,11 +8,13 @@ export interface PageMeta {
   id: string
   /** 页面名称 */
   name: string
-  /** 预设的页面路径（以 / 开始，不以 / 结尾，比如 /aa/bb/cc）*/
-  pagePath: string
-  /** 预设的页面路径前缀（以 / 开始，以 / 结尾，比如 /aa/bb/）*/
+  /** 页面路径（以 / 开始，不以 / 结尾，比如 /aa/bb/cc）*/
+  path: string
+  /** 页面路径前缀（以 / 开始，以 / 结尾，比如 /aa/bb/）*/
   publicPath: string
-  /** 预设的页面路径后缀（不以 / 开始，不以 / 结尾，比如 cc）*/
+  /** 页面素材路径（以 / 开始，以 / 结尾，比如 /aa/bb/ast/）*/
+  assetsPath: string
+  /** 页面路径后缀（不以 / 开始，不以 / 结尾，比如 cc）*/
   privatePath: string
 }
 
@@ -22,6 +24,18 @@ export class Page {
 
   /** 页面名称 */
   readonly name: string
+
+  /** 页面路径（以 / 开始，不以 / 结尾，比如 /aa/bb/cc）*/
+  readonly path: string
+
+  /** 页面素材路径（以 / 开始，以 / 结尾，比如 /aa/bb/ast/）*/
+  readonly assetsPath: string
+
+  /** 页面路径前缀（以 / 开始，以 / 结尾，比如 /aa/bb/）*/
+  readonly publicPath: string
+
+  /** 页面路径后缀（不以 / 开始，不以 / 结尾，比如 cc）*/
+  readonly privatePath: string
 
   /** 页面访问ID（用于打点统计） */
   readonly viewId: string
@@ -38,18 +52,6 @@ export class Page {
   /** 页面 URL 中的域名+端口（比如 xxx.yy:zz，没有协议前缀）*/
   readonly host: string
 
-  /** 页面 URL 中的路径（以 / 开始，比如 /aa/bb/cc/）*/
-  readonly path: string
-
-  /** 预设的页面路径（以 / 开始，不以 / 结尾，比如 /aa/bb/cc）*/
-  readonly pagePath: string
-
-  /** 预设的页面路径前缀（以 / 开始，以 / 结尾，比如 /aa/bb/）*/
-  readonly publicPath: string
-
-  /** 预设的页面路径后缀（不以 / 开始，不以 / 结尾，比如 cc）*/
-  readonly privatePath: string
-  
   /** 页面 URL 中的查询对象（比如 {mm:11,n:22}）*/
   readonly query: RouteStringQuery
 
@@ -68,8 +70,9 @@ export class Page {
   constructor(meta: PageMeta) {
     this.id = meta.id
     this.name = meta.name
-    this.pagePath = meta.pagePath
+    this.path = meta.path
     this.publicPath = meta.publicPath
+    this.assetsPath = meta.assetsPath
     this.privatePath = meta.privatePath
     this.viewId = random()
     const url = stringToUrl(location.href)
@@ -78,7 +81,6 @@ export class Page {
     this.query = url.query
     this.protocol = url.protocol
     this.host = url.host
-    this.path = url.path
     this.search = url.search
     this.hash = url.hash
     this.router = new Router({ page: this })

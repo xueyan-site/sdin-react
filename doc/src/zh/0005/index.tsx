@@ -23,7 +23,7 @@ const MARK1 = `
 | router | 路由对象 | \`Router\` |  |
 | tracker | 打点对象 | \`Tracker\` |  |
 
-> 更多类型定义：[Router](${XT_PATH}?doc=0003)、[Tracker](${XT_PATH}?doc=0004)
+> 更多类型定义：[Router](?doc=0003)、[Tracker](?doc=0004)
 `
 
 export default function Main() {
