@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react'
-import { random } from 'xueyan-react-store'
+import { random } from 'stine'
 import { usePage } from './context'
 import 'intersection-observer'
 

@@ -15,9 +15,9 @@ export interface TrackParams {
  * @returns 
  */
 export function track(params: TrackParams) {
-  if (XT_TRACK_PATH) {
+  if (P_TRACK_PATH) {
     return new Promise<void>(resolve => {
-      if (XT_DEV) {
+      if (P_DEV) {
         const curr = { ...params }
         if (curr.t) {
           curr.t = curr.t.split(TRACK_JOIN_SYMBOL)
@@ -30,7 +30,7 @@ export function track(params: TrackParams) {
       } else {
         const t = document.createElement('img')
         t.crossOrigin = 'anonymous'
-        t.src = XT_TRACK_PATH + queryToString(params)
+        t.src = P_TRACK_PATH + queryToString(params)
         t.onload = t.onerror = () => resolve()
       }
     })

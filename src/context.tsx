@@ -10,8 +10,8 @@ let pageContext: React.Context<Page> | undefined
 let pageClosed: (() => void) | undefined
 
 if (!(pageCache  && pageContext)) {
-  pageCache = new Page((window as any).XT_PAGE)
-  delete (window as any).XT_PAGE;
+  pageCache = new Page((window as any).P_PAGE)
+  delete (window as any).P_PAGE;
   pageContext = createContext<Page>(pageCache)
   pageClosed = initialErrorTracker(pageCache)
 }
@@ -30,7 +30,7 @@ export interface PageProps {
 /**
  * page data and store provider  
  * please don't use it in your project  
- * we've integrated it into xueyan-typescript-cli  
+ * we've integrated it into sdin  
  */
 export function PageProvider({
   Content
@@ -41,8 +41,8 @@ export function PageProvider({
     if (pageCache && pageContext && pageClosed) {
       return [pageCache, pageContext, pageClosed]
     } else {
-      const page = new Page((window as any).XT_PAGE)
-      delete (window as any).XT_PAGE;
+      const page = new Page((window as any).P_PAGE)
+      delete (window as any).P_PAGE;
       const context = createContext<Page>(page)
       const remove = initialErrorTracker(page)
       return [page, context, remove]

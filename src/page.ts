@@ -1,4 +1,4 @@
-import { random } from 'xueyan-react-store'
+import { random } from 'stine'
 import { RouteStringQuery, stringToUrl } from './route-utils'
 import { Router } from './router'
 import { Tracker } from './tracker'

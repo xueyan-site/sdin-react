@@ -1,7 +1,7 @@
 import React from 'react'
 import { PageDoc } from 'com/page-doc'
 import pkg from '../../../package.json'
-import type { PageProps } from 'xueyan-react'
+import type { PageProps } from 'sdin-react'
 import type { Collection } from 'xueyan-react-doc'
 
 const COLLECTIONS: Collection<string,string>[] = [
