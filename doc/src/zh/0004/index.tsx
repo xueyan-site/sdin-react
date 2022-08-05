@@ -1,5 +1,5 @@
 import React from 'react'
-import { Article, Segment } from 'xueyan-react-markdown'
+import { Article, Segment } from 'ark-markdown'
 
 const MARK1 = `
 放置与打点相关的操作和属性
@@ -8,7 +8,7 @@ const MARK1 = `
 | - | - | - | - |
 | page | 当前路由所属的 page 对象 | \`Page\` |  |
 
-> 打点相关功能，需要配置 [track 信息](/xueyan-typescript-cli?doc=0012)。  
+> 打点相关功能，需要配置 [track 信息](/sdin?doc=0012)。  
 > 若配置中没有开启打点，则不会有打点请求发出。  
 
 ## Tracker.pv

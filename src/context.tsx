@@ -2,9 +2,6 @@ import React, { useEffect, createContext, useContext, useMemo } from 'react'
 import { ErrorBoundary, initialErrorTracker } from './error'
 import { Page } from './page'
 
-/**
- * 页面的Store
- */
 let pageCache: Page | undefined
 let pageContext: React.Context<Page> | undefined
 let pageClosed: (() => void) | undefined

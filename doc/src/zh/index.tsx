@@ -1,9 +1,9 @@
 import React from 'react'
 import { PageDoc } from 'com/page-doc'
+import { ClassIcon, HookFunctionIcon, ComponentIcon } from 'sicon'
 import pkg from '../../../package.json'
 import type { PageProps } from 'sdin-react'
-import type { Collection } from 'xueyan-react-doc'
-import { ClassIcon, HookFunctionIcon, ComponentIcon } from 'xueyan-react-icon'
+import type { Collection } from 'ark-doc'
 
 const CLASS_ICON = <ClassIcon color="var(--red)" />
 const HOOK_ICON = <HookFunctionIcon color="var(--green)" />

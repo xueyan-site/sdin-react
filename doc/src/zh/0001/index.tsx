@@ -1,5 +1,5 @@
 import React from 'react'
-import { Article, Segment } from 'xueyan-react-markdown'
+import { Article, Segment } from 'ark-markdown'
 
 const MARK1 = `
 获取页面信息对象

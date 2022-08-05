@@ -1,8 +1,8 @@
 import React from 'react'
-import { Article, Segment } from 'xueyan-react-markdown'
+import { Article, Segment } from 'ark-markdown'
 
 const MARK1 = `
-本工具是为辅助 \`xueyan-typescript-cli\` React 应用程序而设计的。
+本工具是为辅助 \`sdin\` React 应用程序而设计的。
 
 ## History 导航
 
@@ -54,7 +54,7 @@ router.formatUrl(undefined, {
 
 ## 追踪点击行为
 
-> 打点相关功能，需要配置 [track 信息](/xueyan-typescript-cli?doc=0012)，否则无效。  
+> 打点相关功能，需要配置 [track 信息](/sdin?doc=0012)，否则无效。  
 
 \`\`\`
 const { tracker } = usePage()

@@ -1,6 +1,8 @@
 # sdin-react
 
-React application utils for xueyan-typescript-cli
+![sdin-react](https://xueyan.site/sdin-react/ast/project.png)
+
+React application utils for [sdin](https://xueyan.site/sdin)
 
 ## Document
 
